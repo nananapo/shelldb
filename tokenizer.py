@@ -53,7 +53,7 @@ def tokenize(S):
 			exit()
 
 		# symbol
-		if "A" <= s <= "z" or s == "_":
+		if "A" <= s <= "z" or s == "_" or "0" <= s <= "9":
 			tok = Token(TokenType.SYMBOL, i)
 			while i < len(S):
 				s = S[i]

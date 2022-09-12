@@ -5,7 +5,7 @@ class NodeType(Enum):
 	PIPE = 20
 
 	LS = 100
-	GREP = 101
+	WHERE = 101
 	WC = 102
 
 class Node:
@@ -48,6 +48,10 @@ def parse_command(tokens, index):
 		return (node, index)
 	elif tok.str == "wc":
 		node = Node(NodeType.WC)
+		index = read_command_args(tokens, index + 1, node)
+		return (node, index)
+	elif tok.str == "where":
+		node = Node(NodeType.WHERE)
 		index = read_command_args(tokens, index + 1, node)
 		return (node, index)
 	else:
