@@ -13,6 +13,10 @@ class Node:
 		self.type = ty
 		self.rhs = None
 		self.lhs = None
+		self.args = []
+
+	def add_arg(self, tok):
+		self.args.append(tok)
 
 	def __str__(self):
 		if self.type == NodeType.PIPE:
@@ -21,6 +25,15 @@ class Node:
 
 	def __repr__(self):
 	    return self.__str__()
+
+def read_command_args(tokens, index, node):
+	while index < len(tokens):
+		if tokens[index].type == TokenType.SYMBOL:
+			node.add_arg(tokens[index])
+		else:
+			break
+		index += 1
+	return (index)
 
 def parse_command(tokens, index):
 	tok = tokens[index]
@@ -31,10 +44,12 @@ def parse_command(tokens, index):
 
 	if tok.str == "ls":
 		node = Node(NodeType.LS)
-		return (node, index + 1)
+		index = read_command_args(tokens, index + 1, node)
+		return (node, index)
 	elif tok.str == "wc":
 		node = Node(NodeType.WC)
-		return (node, index + 1)
+		index = read_command_args(tokens, index + 1, node)
+		return (node, index)
 	else:
 		print("parse error: unknown command", tok.str)
 		exit()
