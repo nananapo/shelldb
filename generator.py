@@ -8,7 +8,7 @@ def gen(node, piped, pipedSql = ""):
 			exit()
 		
 		if len(node.args) != 1:
-			print("Usage : wc [tablename]")
+			print("Usage : ls [tablename]")
 			exit()
 
 		return "SELECT * FROM " + node.args[0].str
