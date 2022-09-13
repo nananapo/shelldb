@@ -14,8 +14,8 @@ def gen(node, piped, pipedSql = ""):
 		if piped:
 			print("error : ls doesn't use input")
 			exit()
-		
-		if len(node.args) != 1:
+
+		if node.argc != 1:	
 			print("Usage : ls [tablename]")
 			exit()
 
@@ -25,7 +25,7 @@ def gen(node, piped, pipedSql = ""):
 		if piped:
 			return "SELECT COUNT(*) FROM (" + pipedSql + ")"
 
-		if len(node.args) != 1:
+		if node.argc != 1:	
 			print("Usage : count [tablename]")
 			exit()
 
@@ -37,12 +37,12 @@ def gen(node, piped, pipedSql = ""):
 			exit()
 
 		# とりあえず=で結ぶ
-		if len(node.args) == 0 or len(node.args) % 2 == 1:
+		if node.argc == 0 or node.argc % 2 == 1:
 			print("error : where arg")
 			exit()
 
 		conds = []
-		for i in range(0, len(node.args), 2):
+		for i in range(0, node.argc, 2):
 			id = node.args[i].str
 			val = node.args[i + 1].str
 			conds.append(id + " = \"" + val + "\"")
@@ -54,7 +54,7 @@ def gen(node, piped, pipedSql = ""):
 			print("error : limit requires input")
 			exit()
 
-		if len(node.args) != 1:
+		if node.argc != 1:
 			print("Usage : limit [count]")
 			exit()
 

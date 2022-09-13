@@ -1,3 +1,4 @@
+import copy
 from tokenizer import TokenType
 from enum import Enum
 
@@ -14,10 +15,16 @@ class Node:
 		self.type = ty
 		self.rhs = None
 		self.lhs = None
-		self.args = []
+		self.__args = []
+		self.argc = 0
 
 	def add_arg(self, tok):
-		self.args.append(tok)
+		self.__args.append(tok)
+		self.argc += 1
+
+	@property
+	def args(self):
+		return copy.copy(self.__args)
 
 	def __str__(self):
 		if self.type == NodeType.PIPE:
