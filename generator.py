@@ -1,19 +1,27 @@
 from parser import NodeType
 
-TABLE = "test"
-
 def gen(node, piped, pipedSql = ""):
 
 	if node.type == NodeType.LS:
 		if piped:
 			print("error : ls doesn't use input")
 			exit()
-		return "SELECT * FROM " + TABLE
+		
+		if len(node.args) != 1:
+			print("Usage : wc [tablename]")
+			exit()
+
+		return "SELECT * FROM " + node.args[0].str
 
 	if node.type == NodeType.WC:
 		if piped:
 			return "SELECT COUNT(*) FROM (" + pipedSql + ")"
-		return "SELECT COUNT(*) FROM " + TABLE
+
+		if len(node.args) != 1:
+			print("Usage : wc [tablename]")
+			exit()
+
+		return "SELECT COUNT(*) FROM " + node.args[0].str
 
 	if node.type == NodeType.PIPE:
 		if piped:
