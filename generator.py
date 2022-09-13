@@ -36,7 +36,7 @@ def gen(node, piped, pipedSql = ""):
 		for i in range(0, len(node.args), 2):
 			id = node.args[i].str
 			val = node.args[i + 1].str
-			conds.append(id + " = " + val)
+			conds.append(id + " = \"" + val + "\"")
 
 		return "SELECT * FROM (" + pipedSql + ") WHERE " + " AND ".join(conds)
 
