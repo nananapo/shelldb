@@ -6,7 +6,8 @@ class NodeType(Enum):
 
 	LS = 100
 	WHERE = 101
-	WC = 102
+	COUNT = 102
+	LIMIT = 103
 
 class Node:
 	def __init__(self, ty):
@@ -26,6 +27,13 @@ class Node:
 	def __repr__(self):
 	    return self.__str__()
 
+commands = {
+	"ls": NodeType.LS,
+	"where": NodeType.WHERE,
+	"count": NodeType.COUNT,
+	"limit": NodeType.LIMIT,
+}
+
 def read_command_args(tokens, index, node):
 	while index < len(tokens):
 		if tokens[index].type == TokenType.SYMBOL:
@@ -35,6 +43,11 @@ def read_command_args(tokens, index, node):
 		index += 1
 	return (index)
 
+def consume_command(ty, tokens, index):
+		node = Node(ty)
+		index = read_command_args(tokens, index, node)
+		return (node, index)
+
 def parse_command(tokens, index):
 	tok = tokens[index]
 
@@ -42,18 +55,8 @@ def parse_command(tokens, index):
 		print("parse error : not command", tok)
 		exit()
 
-	if tok.str == "ls":
-		node = Node(NodeType.LS)
-		index = read_command_args(tokens, index + 1, node)
-		return (node, index)
-	elif tok.str == "wc":
-		node = Node(NodeType.WC)
-		index = read_command_args(tokens, index + 1, node)
-		return (node, index)
-	elif tok.str == "where":
-		node = Node(NodeType.WHERE)
-		index = read_command_args(tokens, index + 1, node)
-		return (node, index)
+	if tok.str in commands:
+		return consume_command(commands[tok.str], tokens, index + 1)
 	else:
 		print("parse error: unknown command", tok.str)
 		exit()
