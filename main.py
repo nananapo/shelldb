@@ -2,6 +2,7 @@ from tokenizer import tokenize
 from parser import parse
 from analyzer import analyze
 from generator import generate
+from dbutil import execsql
 
 while True:
 	userinput = input("$ ")
@@ -18,5 +19,8 @@ while True:
 
 	for i in range(len(asts)):
 		analyzed = analyze(asts[i])
+		sql = generate(analyzed)
 		print("#0")
-		print(" ",generate(analyzed))
+		print(" ", sql)
+		print("result------")
+		execsql("test.db", sql)
