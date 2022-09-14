@@ -8,7 +8,7 @@ def gen(node, piped, pipedSql = ""):
 		return gen(node.rhs, True, sql)
 
 	if node.type == NodeType.REDIRECT_WRITE:
-		sub = gen(node.lhs, False)
+		sub = gen(node.lhs, piped, pipedSql)
 		return "INSERT INTO " + node.args[0].str + " " + sub
 
 	if node.type == NodeType.LS:
