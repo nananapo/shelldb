@@ -9,6 +9,9 @@ from util import isint
 
 def ana(node, piped):
 
+	if node.type == NodeType.ERROR:
+		return (False, node)
+
 	if node.type == NodeType.PIPE:
 		(success1, node.lhs) = ana(node.lhs, piped)
 		(success2, node.rhs) = ana(node.rhs, True)

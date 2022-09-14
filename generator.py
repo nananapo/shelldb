@@ -17,6 +17,7 @@ def gen(node, piped, pipedSql = ""):
 	if node.type == NodeType.COUNT:
 		if piped:
 			return "SELECT COUNT(*) FROM (" + pipedSql + ")"
+		print(node, node.args)
 		return "SELECT COUNT(*) FROM " + node.args[0].str
 
 	if node.type == NodeType.WHERE:

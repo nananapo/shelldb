@@ -12,11 +12,13 @@ class NodeType(Enum):
 	LIMIT	= 103
 	SCHEMA	= 104
 
+	ERROR	= 400
+
 class Node:
-	def __init__(self, ty):
+	def __init__(self, ty, lhs = None, rhs = None):
 		self.type = ty
-		self.rhs = None
-		self.lhs = None
+		self.lhs = lhs
+		self.rhs = rhs
 		self.__args = []
 		self.argc = 0
 
@@ -63,22 +65,20 @@ def parse_command(tokens, index):
 
 	if tok.type != TokenType.SYMBOL:
 		print("parse error : not command", tok)
-		exit()
+		return (Node(NodeType.ERROR), len(tokens) - 1)
 
-	if tok.str in commands:
-		return consume_command(commands[tok.str], tokens, index + 1)
-	else:
+	if tok.str not in commands:
 		print("parse error: unknown command", tok.str)
-		exit()
+		return (Node(NodeType.ERROR), len(tokens) - 1)
+
+	return consume_command(commands[tok.str], tokens, index + 1)
 
 def parse_pipe(tokens, index):
 	(ast, index) = parse_command(tokens, index)
 	tok = tokens[index]
 	if tok.type == TokenType.PIPE:
-		index += 1
-		node = Node(NodeType.PIPE)
-		node.lhs = ast
-		(node.rhs, index) = parse_syntax(tokens, index)
+		node = Node(NodeType.PIPE, ast)
+		(node.rhs, index) = parse_syntax(tokens, index + 1)
 		return (node, index)
 	return (ast, index)
 
@@ -86,11 +86,8 @@ def parse_syntax(tokens, index):
 	(ast, index) = parse_pipe(tokens, index)
 	tok = tokens[index]
 	if tok.type == TokenType.REDIRECT_WRITE:
-		index += 1
-		node = Node(NodeType.REDIRECT_WRITE)
-		node.lhs = ast
-		index = read_command_args(tokens, index, node)
-		return (node, index)
+		node = Node(NodeType.REDIRECT_WRITE, ast)
+		return (node, read_command_args(tokens, index + 1, node))
 	return (ast, index)
 
 def parse(tokens):
