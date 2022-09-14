@@ -77,10 +77,9 @@ def tokenize(S):
 			continue
 
 		print("tokenize error : " , s)
-		print("number : ", i)
-		exit()
+		print("pos :", i)
+		return (False, tokens)
 
 	# eof
 	tokens.append(Token(TokenType.EOF, i))
-
-	return tokens
+	return (True, tokens)

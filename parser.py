@@ -11,7 +11,6 @@ class NodeType(Enum):
 	COUNT	= 102
 	LIMIT	= 103
 	SCHEMA	= 104
-	
 
 class Node:
 	def __init__(self, ty):
@@ -55,9 +54,9 @@ def read_command_args(tokens, index, node):
 	return (index)
 
 def consume_command(ty, tokens, index):
-		node = Node(ty)
-		index = read_command_args(tokens, index, node)
-		return (node, index)
+	node = Node(ty)
+	index = read_command_args(tokens, index, node)
+	return (node, index)
 
 def parse_command(tokens, index):
 	tok = tokens[index]
