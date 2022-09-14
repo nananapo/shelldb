@@ -4,11 +4,11 @@ class TokenType(Enum):
 	EOF				= 0
 
 	SYMBOL			= 10
-	STR				= 11
+	#STR			= 11
 
 	PIPE			= 20
 	REDIRECT_WRITE	= 21
-	REDIRECT_APPEND	= 22
+	#REDIRECT_APPEND= 22
 
 class Token:
 	def __init__(self, ty, strindex):
@@ -27,7 +27,6 @@ class Token:
 ops = {
 	"|": TokenType.PIPE,
 	">": TokenType.REDIRECT_WRITE,
-	">>": TokenType.REDIRECT_APPEND
 }
 
 def matchword(S, index, word):

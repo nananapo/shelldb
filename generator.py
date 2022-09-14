@@ -10,6 +10,14 @@ def gen(node, piped, pipedSql = ""):
 		sql = gen(node.lhs, False)
 		return gen(node.rhs, True, sql)
 
+	if node.type == NodeType.REDIRECT_WRITE:
+		if node.argc != 1:
+			print("Usage : >> [tablename]")
+			exit()
+
+		sub = gen(node.lhs, False)
+		return "INSERT INTO " + node.args[0].str + " " + sub
+
 	if node.type == NodeType.LS:
 		if piped:
 			print("error : ls doesn't use input")

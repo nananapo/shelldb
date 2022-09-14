@@ -3,12 +3,13 @@ from tokenizer import TokenType
 from enum import Enum
 
 class NodeType(Enum):
-	PIPE = 20
+	PIPE			= 20
+	REDIRECT_WRITE	= 21
 
-	LS = 100
-	WHERE = 101
-	COUNT = 102
-	LIMIT = 103
+	LS		= 100
+	WHERE	= 101
+	COUNT	= 102
+	LIMIT	= 103
 
 class Node:
 	def __init__(self, ty):
@@ -68,7 +69,7 @@ def parse_command(tokens, index):
 		print("parse error: unknown command", tok.str)
 		exit()
 
-def parse_syntax(tokens, index):
+def parse_pipe(tokens, index):
 	(ast, index) = parse_command(tokens, index)
 	tok = tokens[index]
 	if tok.type == TokenType.PIPE:
@@ -76,6 +77,17 @@ def parse_syntax(tokens, index):
 		node = Node(NodeType.PIPE)
 		node.lhs = ast
 		(node.rhs, index) = parse_syntax(tokens, index)
+		return (node, index)
+	return (ast, index)
+
+def parse_syntax(tokens, index):
+	(ast, index) = parse_pipe(tokens, index)
+	tok = tokens[index]
+	if tok.type == TokenType.REDIRECT_WRITE:
+		index += 1
+		node = Node(NodeType.REDIRECT_WRITE)
+		node.lhs = ast
+		index = read_command_args(tokens, index, node)
 		return (node, index)
 	return (ast, index)
 
