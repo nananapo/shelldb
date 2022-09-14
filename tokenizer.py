@@ -1,12 +1,14 @@
 from enum import Enum
 
 class TokenType(Enum):
-	EOF		= 0
+	EOF				= 0
 
-	SYMBOL	= 10
-	STR		= 11
+	SYMBOL			= 10
+	STR				= 11
 
-	PIPE	= 20
+	PIPE			= 20
+	REDIRECT_WRITE	= 21
+	REDIRECT_APPEND	= 22
 
 class Token:
 	def __init__(self, ty, strindex):
@@ -21,6 +23,12 @@ class Token:
 
 	def __repr__(self):
 	    return self.__str__()
+
+ops = {
+	"|": TokenType.PIPE,
+	">": TokenType.REDIRECT_WRITE,
+	">>": TokenType.REDIRECT_APPEND
+}
 
 def matchword(S, index, word):
 	if len(S) - index < len(word):
@@ -42,9 +50,14 @@ def tokenize(S):
 			continue
 
 		# op
-		if matchword(S, i, "|"):
-			tokens.append(Token(TokenType.PIPE, i))
-			i += 1
+		is_word = False
+		for (word, ty) in ops.items():
+			if matchword(S, i, word):
+				tokens.append(Token(ty, i))
+				i += len(word)
+				is_word = True
+				break
+		if is_word:
 			continue
 
 		# string
