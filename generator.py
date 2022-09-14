@@ -74,6 +74,14 @@ def gen(node, piped, pipedSql = ""):
 		count = int(s)
 		return "SELECT * FROM (" + pipedSql + ") LIMIT " + str(count)
 
+	if node.type == NodeType.SCHEMA:
+		# TODO pipeするのもされるのも許さない
+		if node.argc != 1:
+			print("Usage : schema [tablename]")
+			exit()
+
+		return ".schema " + node.args[0].str + "\n"
+
 	print("gen: unknown node", node)
 	exit()
 

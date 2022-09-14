@@ -10,6 +10,8 @@ class NodeType(Enum):
 	WHERE	= 101
 	COUNT	= 102
 	LIMIT	= 103
+	SCHEMA	= 104
+	
 
 class Node:
 	def __init__(self, ty):
@@ -40,6 +42,7 @@ commands = {
 	"where": NodeType.WHERE,
 	"count": NodeType.COUNT,
 	"limit": NodeType.LIMIT,
+	"schema": NodeType.SCHEMA
 }
 
 def read_command_args(tokens, index, node):
