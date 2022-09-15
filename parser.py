@@ -12,6 +12,9 @@ class NodeType(Enum):
 	LIMIT	= 103
 	SCHEMA	= 104
 
+	STR	= 30
+	NUM	= 31
+
 	ERROR	= 400
 
 class Node:
@@ -21,6 +24,8 @@ class Node:
 		self.rhs = rhs
 		self.__args = []
 		self.argc = 0
+		self.num = 0
+		self.str = ""
 
 	def add_arg(self, tok):
 		self.__args.append(tok)
@@ -46,13 +51,25 @@ commands = {
 	"schema": NodeType.SCHEMA
 }
 
+def consume_command_arg(tokens, index, node):
+	tok = tokens[index]
+	if tok.type == TokenType.STR:
+		arg = Node(NodeType.STR)
+		arg.str = tok.str
+		node.add_arg(arg)
+		return (True, index + 1)
+	if tok.type == TokenType.NUM:
+		arg = Node(NodeType.NUM)
+		arg.num = tok.num
+		node.add_arg(arg)
+		return (True, index + 1)
+	return (False, index)
+
 def read_command_args(tokens, index, node):
 	while index < len(tokens):
-		if tokens[index].type == TokenType.STR:
-			node.add_arg(tokens[index])
-		else:
+		(success, index) = consume_command_arg(tokens, index, node)
+		if not success:
 			break
-		index += 1
 	return (index)
 
 def consume_command(ty, tokens, index):

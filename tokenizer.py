@@ -101,6 +101,17 @@ def tokenize(S):
 			tokens.append(tok)
 			continue
 
+		# int
+		if "0" <= s <= "9":
+			tok = Token(TokenType.NUM, i)
+			while i < len(S):
+				if not( "0" <= S[i] <= "9"):
+					break
+				tok.num = tok.num * 10 + int(S[i])
+				i += 1
+			tokens.append(tok)
+			continue
+
 		print("tokenize error : " , s)
 		print("pos :", i)
 		return (False, tokens)

@@ -30,7 +30,7 @@ def gen(node, piped, pipedSql = ""):
 		return "SELECT * FROM (" + pipedSql + ") WHERE " + " AND ".join(conds)
 
 	if node.type == NodeType.LIMIT:
-		count = int(node.args[0].str)
+		count = node.args[0].num
 		return "SELECT * FROM (" + pipedSql + ") LIMIT " + str(count)
 
 	if node.type == NodeType.SCHEMA:

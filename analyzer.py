@@ -6,7 +6,7 @@ from util import isint
 # TODO ↑これに関して、先にスキーマを取得しておきたい
 # TODO 使っていないコマンドライン引数があるときどうする？
 #      例えばパイプ時のls table
-
+#      whereで数字が使えない件
 def ana(node, piped):
 
 	if node.type == NodeType.ERROR:
@@ -56,18 +56,9 @@ def ana(node, piped):
 			print("error : limit requires input")
 			return (False, node)
 
-		if node.argc != 1:
+		if node.argc != 1 or node.args[0].type != NodeType.NUM:
 			print("Usage : limit [count]")
 			return (False, node)
-
-		# 引数が数字ではない
-		s = node.args[0].str
-		if not isint(s):
-			print("error : failed to parse int :", s)
-			return (False, node)
-
-		# TODO nodeを置き換えてしまいたい
-		# count = int(s)
 		return (True, node)
 
 	if node.type == NodeType.SCHEMA:
