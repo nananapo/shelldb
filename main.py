@@ -14,10 +14,10 @@ while True:
 	(success, tokens) = tokenize(userinput)
 	if not success:
 		continue
-	print("Token", tokens)
+	#print("Token", tokens)
 
 	asts = parse(tokens)
-	print("AST", asts)
+	#print("AST", asts)
 
 	for i in range(len(asts)):
 		(success, analyzed) = analyze(asts[i])
@@ -27,6 +27,5 @@ while True:
 		sql = generate(analyzed)
 		if len(asts) != 1:
 			print("#",i)
-		print(" ", sql)
-		print("result------")
-		execsql("test.db", sql)
+		print("<",sql)
+		print(execsql("test.db", sql))
