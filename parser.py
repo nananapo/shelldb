@@ -48,7 +48,7 @@ commands = {
 
 def read_command_args(tokens, index, node):
 	while index < len(tokens):
-		if tokens[index].type == TokenType.SYMBOL:
+		if tokens[index].type == TokenType.STR:
 			node.add_arg(tokens[index])
 		else:
 			break
@@ -63,7 +63,7 @@ def consume_command(ty, tokens, index):
 def parse_command(tokens, index):
 	tok = tokens[index]
 
-	if tok.type != TokenType.SYMBOL:
+	if tok.type != TokenType.STR:
 		print("parse error : not command", tok)
 		return (Node(NodeType.ERROR), len(tokens) - 1)
 

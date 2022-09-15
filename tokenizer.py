@@ -1,10 +1,10 @@
 from enum import Enum
 
 class TokenType(Enum):
-	EOF				= 0
+	EOF	= 0
 
-	SYMBOL			= 10
-	#STR			= 11
+	NUM	= 10
+	STR	= 11
 
 	PIPE			= 20
 	REDIRECT_WRITE	= 21
@@ -15,10 +15,13 @@ class Token:
 		self.type = ty
 		self.strindex = strindex
 		self.str = ""
+		self.num = 0
 
 	def __str__(self):
-		if self.type == TokenType.SYMBOL:
+		if self.type == TokenType.STR:
 			return "Token<"+str(self.str)+">"
+		elif self.type == TokenType.NUM:
+			return "Token<"+str(self.num)+">"
 		return "Token<"+str(self.type)+", "+str(self.strindex)+">"
 
 	def __repr__(self):
@@ -61,12 +64,34 @@ def tokenize(S):
 
 		# string
 		if s == "\"":
-			print("not impl")
-			exit()
+			tok = Token(TokenType.STR, i)
+			i += 1
+			while i < len(S):
+				if S[i] == "\"":
+					i += 1
+					break
+				if S[i] == "\\":
+					i += 1
+					if S[i] == "n":
+						tok.str += "\n"
+					elif S[i] == "\"":
+						tok.str += "\""
+					else:
+						print("tokenize error : not control charcter")
+						return (False, tokens)
+				else:
+					tok.str += S[i]
+				i += 1
+			else:
+				print("tokenize error : \" not close")
+				return (False, tokens)
+			i += 1
+			tokens.append(tok)
+			continue
 
-		# symbol
-		if "A" <= s <= "z" or s == "_" or "0" <= s <= "9":
-			tok = Token(TokenType.SYMBOL, i)
+		# string
+		if "A" <= s <= "z" or s == "_":
+			tok = Token(TokenType.STR, i)
 			while i < len(S):
 				s = S[i]
 				if not ("A" <= s <= "z" or s == "_" or "0" <= s <= "9"):
